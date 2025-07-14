@@ -1,8 +1,82 @@
-dddddddddddddayuyu
+// ─── Navigate to the Training Certificate tab ─────────────────────────────
+    cy.get('.nav-pills > :nth-child(5) > .nav-link > p')
+      .should('be.visible')
+      .click();
+    cy.wait(2000);
+
+    // ─── Open the Add Training Certificate modal ──────────────────────────────
+    cy.get('.float-sm-right')            // “+ Add” button on that page
+      .should('be.visible')
+      .click({ force: true });
+    cy.wait(2000);
+
+    // // ─── Select Certificate Type via selectize ───────────────────────────────
+    // const certificateTypeToPick = 'Friday Reminder';  // ← your test value
+    // cy.get('#CertificateTypeId-selectized').click();
+    // cy.get('.selectize-dropdown-content')
+    //   .contains(certificateTypeToPick)
+    //   .click();
 
 
-llllllllllllpkkkkkkkkk
+      // Random Certificate Type select kare
+// Open dropdown
+// ─── Select Certificate Type via selectize ───────────────────────────────
+const certificateTypeToPick = 'Friday Reminder';  // ← your test value
+cy.get('#CertificateTypeId-selectized').click();
+cy.wait(500);  // thoda wait zaroori hai, dropdown render hone ka
+
+cy.get('.selectize-dropdown-content')
+  .contains(certificateTypeToPick)
+  .click();
+
+// ─── Pick Issue Date ───────────────────────────────────────
+const issueDate = '2020-11-06';  // format converted
+
+cy.get('#IssueDate')
+  .invoke('val', issueDate)
+  .trigger('input')
+  .trigger('change');
 
 
+cy.wait(2000);
 
-jokl
+// ─── Select Worker via selectize ─────────────────────────────────────────
+const workers = [
+  'Amir Ali',
+  'KIRAN PHOOL',
+  'Sahroo Khan',
+  'SAHROO KHAN',
+  'Shani Khan'
+];
+
+// Generate random worker
+const randomWorker = workers[Math.floor(Math.random() * workers.length)];
+
+// Open the worker dropdown
+cy.get('#WorkerName-selectized').click();
+
+// Wait for search field
+cy.wait(500);
+
+// Type random worker name (for Selectize)
+cy.get('#WorkerName-selectized').type(randomWorker);
+
+// Wait for filtered result
+cy.wait(500);
+
+// Select the worker
+cy.get('.selectize-dropdown-content')
+  .contains(randomWorker).click();
+
+// ─── Upload a file ───────────────────────────────────────────────────────
+// Skip for now (already commented)
+
+// ─── Save ─────────────────────────────────────────────────────────────────
+cy.get('.modal-footer > .btn')      // the “Save” button
+  .should('be.visible')
+  .click();
+
+// ─── Wait for success toast & modal close ────────────────────────────────
+cy.contains('Saved Successfully', { timeout: 15000 }).should('be.visible');
+
+    cy.get('#TrainingCertificateCreateModal', { timeout: 15000 }).should('not.be.visible');
